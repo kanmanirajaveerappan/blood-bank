@@ -200,24 +200,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* 1-Click Demo Logins */}
-        <div className="quick-roles-section">
-          <span className="quick-role-title">⚡ 1-Click Demo Accounts:</span>
-          <div className="quick-role-buttons-grid">
-            <button type="button" className="quick-role-btn" onClick={() => handleQuickSelect('hospital@lifelink.ai', 'hospital123')}>
-              🏥 Hospital
-            </button>
-            <button type="button" className="quick-role-btn" onClick={() => handleQuickSelect('donor@lifelink.ai', 'donor123')}>
-              🩸 Donor
-            </button>
-            <button type="button" className="quick-role-btn" onClick={() => handleQuickSelect('bloodbank@lifelink.ai', 'bloodbank123')}>
-              🏦 Blood Bank
-            </button>
-            <button type="button" className="quick-role-btn" onClick={() => handleQuickSelect('admin@lifelink.ai', 'admin123')}>
-              ⚙️ Admin
-            </button>
-          </div>
-        </div>
+
 
         <div className="auth-footer-link">
           <span>New facility or donor?</span> <Link to="/register">Create an account</Link>
