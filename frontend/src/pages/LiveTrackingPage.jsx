@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import GoogleMapView from '../components/GoogleMapView'
 import TrackingStatus from '../components/TrackingStatus'
 import { ArrowLeft, Clock, RotateCcw, Navigation } from 'lucide-react'
+import { API_BASE_URL } from '../services/api'
 
 const formatTime = (date) => {
   if (!date) return '—'
@@ -48,7 +49,7 @@ export default function LiveTrackingPage() {
     const fetchRequest = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`http://${window.location.hostname || 'localhost'}:8000/api/v1/hospitals/requests/${requestId}`)
+        const response = await fetch(`${API_BASE_URL}/hospitals/requests/${requestId}`)
         const data = await response.json()
         if (data.success && data.data) {
           const r = data.data

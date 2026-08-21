@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import RoutePanel from '../components/RoutePanel'
 import { useLanguage } from '../context/LanguageContext'
 import { ArrowLeft, Siren, Phone } from 'lucide-react'
+import { API_BASE_URL } from '../services/api'
 
 export default function NavigationPage() {
   const { requestId } = useParams()
@@ -21,7 +22,7 @@ export default function NavigationPage() {
   useEffect(() => {
     const fetchRequestDetails = async () => {
       try {
-        const response = await fetch(`http://${window.location.hostname || 'localhost'}:8000/api/v1/hospitals/requests/${requestId}`)
+        const response = await fetch(`${API_BASE_URL}/hospitals/requests/${requestId}`)
         const res = await response.json()
         if (res.success && res.data) {
           const r = res.data

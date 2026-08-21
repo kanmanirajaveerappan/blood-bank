@@ -1,11 +1,14 @@
 // Automatic API base URL resolution:
 // Connects to Flask backend on port 8000 whether on localhost or LAN IP (e.g. 192.168.x.x)
 const getApiBaseUrl = () => {
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL
+  }
   if (typeof window === 'undefined') return 'http://localhost:8000/api/v1'
   const hostname = window.location.hostname || 'localhost'
   return `http://${hostname}:8000/api/v1`
 }
-const API_BASE_URL = getApiBaseUrl()
+export const API_BASE_URL = getApiBaseUrl()
 
 
 async function request(endpoint, options = {}) {

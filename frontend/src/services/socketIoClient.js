@@ -3,11 +3,14 @@ import { io } from "socket.io-client";
 
 // Determine backend URL: point to the Flask server on port 8000
 const getSocketUrl = () => {
+  if (import.meta.env.VITE_SOCKET_URL) {
+    return import.meta.env.VITE_SOCKET_URL
+  }
   if (typeof window === 'undefined') return 'http://localhost:8000'
   const hostname = window.location.hostname || 'localhost'
   return `http://${hostname}:8000`
 }
-const SOCKET_URL = getSocketUrl()
+export const SOCKET_URL = getSocketUrl()
 
 
 const socket = io(SOCKET_URL, {
