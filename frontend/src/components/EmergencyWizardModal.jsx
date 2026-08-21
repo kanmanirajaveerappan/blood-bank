@@ -7,14 +7,11 @@ import {
   Search, 
   MapPin, 
   Navigation, 
-  CheckCircle2, 
   AlertTriangle, 
-  Clock, 
   Building2, 
   ShieldCheck, 
   ChevronDown, 
   ChevronUp, 
-  RefreshCw,
   Sparkles,
   School,
   Droplet
@@ -57,12 +54,14 @@ export default function EmergencyWizardModal({ isOpen, onClose, onRequestCreated
 
   // Handle live search with query preservation and intelligent ranking
   useEffect(() => {
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
+
     if (!searchQuery.trim()) {
-      setSearchResults([])
+      searchDebounceRef.current = setTimeout(() => {
+        setSearchResults([])
+      }, 0)
       return
     }
-
-    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current)
 
     searchDebounceRef.current = setTimeout(async () => {
       setIsSearching(true)

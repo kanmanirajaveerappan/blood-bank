@@ -1,4 +1,4 @@
-import { Droplet, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { Droplet } from 'lucide-react'
 
 export default function InventoryCard({
   bloodGroup,

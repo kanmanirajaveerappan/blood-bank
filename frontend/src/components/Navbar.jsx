@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getStoredRole, setStoredRole, clearStoredRole, getDashboardPathForRole } from '../lib/auth'
 import { useLanguage } from '../context/LanguageContext'

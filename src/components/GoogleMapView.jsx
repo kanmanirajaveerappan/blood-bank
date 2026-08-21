@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { 
@@ -7,22 +7,14 @@ import {
   Pause, 
   RotateCcw, 
   ExternalLink, 
-  Compass, 
   Radio, 
   Car, 
   Volume2, 
   VolumeX, 
-  CheckCircle, 
-  ArrowRight,
-  Layers,
-  MapPin,
-  Clock,
-  Zap,
-  Maximize2,
-  Minimize2,
-  ChevronDown,
-  ChevronUp,
-  AlertTriangle
+  Layers, 
+  Zap, 
+  Maximize2, 
+  ChevronDown
 } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext'
 

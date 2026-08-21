@@ -121,7 +121,7 @@ export default function RegisterPage() {
         setLocationStatus(`🛰️ Hardware GPS Locked: ${lat}° N, ${lng}° E`)
         setLocationDetecting(false)
         return
-      } catch (_geoErr) {
+      } catch {
         console.info('Hardware GPS unavailable or permission prompt dismissed, using smart fallback...')
       }
     }

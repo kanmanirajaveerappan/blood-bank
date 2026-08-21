@@ -1,8 +1,7 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useCallback } from 'react'
 import './App.css'
 import { bloodGroups } from './data/donors'
-import { compatibilityMatrix } from './utils/matching'
-import { requestDonorMatch, triggerAgentCoordination, fetchBloodInventory, fetchAdminStats } from './services/api'
+import { requestDonorMatch, fetchBloodInventory, fetchAdminStats } from './services/api'
 import Navbar from './components/Navbar'
 import InteractiveMap from './components/InteractiveMap'
 import EmergencyWizardModal from './components/EmergencyWizardModal'
@@ -38,12 +37,50 @@ function App() {
   const [selectedDonor, setSelectedDonor] = useState(null)
   const [inventory, setInventory] = useState([])
   const [stats, setStats] = useState({ total_registered_donors: 0, active_available_donors: 0 })
+  const [recentActivity] = useState([
+    'Automated KNN matching engine synchronized with live GPS telemetry',
+    '8-Group Blood Bank inventory refreshed from Neon PostgreSQL database',
+    'Emergency broadcast channel listening for incoming trauma requests',
+    'Dynamic multi-agent priority ranking activated for Coimbatore Region',
+  ])
+
+  const processEmergencyRequest = useCallback(async () => {
+    setIsLoading(true)
+    setStatus('Evaluating live compatibility and geospatial KNN ranking...')
+
+    try {
+      const response = await requestDonorMatch({
+        bloodGroup: request.bloodGroup,
+        latitude: request.latitude,
+        longitude: request.longitude,
+        k: 5,
+        maxDistanceKm: searchRadius,
+      })
+
+      const nextMatches = response?.data || []
+      setMatches(nextMatches)
+
+      if (nextMatches.length === 0) {
+        setStatus('No compatible available donors found in live database within search radius.')
+        return
+      }
+
+      setStatus(
+        `Matched ${nextMatches.length} priority donors for ${request.bloodGroup}. Nearest is ${nextMatches[0].name} at ${nextMatches[0].distance_km || nextMatches[0].distanceKm} km (AI Priority: ${nextMatches[0].priority_score ?? 98}%).`,
+      )
+    } catch {
+      setMatches([])
+      setStatus('No donors found in live database for this search area.')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [request.bloodGroup, request.latitude, request.longitude, searchRadius])
 
   useEffect(() => {
     processEmergencyRequest()
     fetchBloodInventory().then(res => setInventory(res.data || [])).catch(() => setInventory([]))
     fetchAdminStats().then(res => setStats(res.data || {})).catch(() => {})
-  }, [])
+  }, [processEmergencyRequest])
 
   const totalInventoryUnits = useMemo(() => {
     return inventory.reduce((acc, item) => acc + (item.units || 0), 0)
@@ -90,38 +127,6 @@ function App() {
       ...current,
       [name]: Number(value),
     }))
-  }
-
-  const processEmergencyRequest = async () => {
-    setIsLoading(true)
-    setStatus('Evaluating live compatibility and geospatial KNN ranking...')
-
-    try {
-      const response = await requestDonorMatch({
-        bloodGroup: request.bloodGroup,
-        latitude: request.latitude,
-        longitude: request.longitude,
-        k: 5,
-        maxDistanceKm: searchRadius,
-      })
-
-      const nextMatches = response?.data || []
-      setMatches(nextMatches)
-
-      if (nextMatches.length === 0) {
-        setStatus('No compatible available donors found in live database within search radius.')
-        return
-      }
-
-      setStatus(
-        `Matched ${nextMatches.length} priority donors for ${request.bloodGroup}. Nearest is ${nextMatches[0].name} at ${nextMatches[0].distance_km || nextMatches[0].distanceKm} km (AI Priority: ${nextMatches[0].priority_score ?? 98}%).`,
-      )
-    } catch (error) {
-      setMatches([])
-      setStatus('No donors found in live database for this search area.')
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   return (

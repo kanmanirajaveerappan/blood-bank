@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 
 export default function InteractiveMap({
   hospitalLat = 11.0168,

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import LocationStatus from '../components/LocationStatus'
 import { updateDonorAvailability, updateDonorLocation, fetchDonorAlerts, fetchDonorHistory, respondToDonorAlert } from '../services/api'
 import { useLanguage } from '../context/LanguageContext'
-import { Siren, MapPin, Clock, Shield, CheckCircle2, Eye, Check, Navigation, Droplet, UserCheck, Inbox } from 'lucide-react'
+import { Siren, MapPin, Clock, Shield, CheckCircle2, Eye, Check, Navigation, Droplet, UserCheck } from 'lucide-react'
 
 export default function DonorDashboardPage() {
   const [theme, setTheme] = useState('dark')
   const [isAvailable, setIsAvailable] = useState(true)
   const [locationFreshness, setLocationFreshness] = useState('FRESH')
-  const [lastLocationUpdate] = useState(new Date(Date.now() - 4 * 60000))
+  const [lastLocationUpdate] = useState(() => new Date(Date.now() - 4 * 60000))
   const [privacyMask, setPrivacyMask] = useState(true)
   const [alerts, setAlerts] = useState([])
   const [history, setHistory] = useState([])
@@ -41,11 +41,7 @@ export default function DonorDashboardPage() {
     isVerified: true,
   }
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const res = await fetchDonorAlerts(donorId)
       setAlerts(res.data || [])
@@ -59,7 +55,11 @@ export default function DonorDashboardPage() {
     } catch {
       setHistory([])
     }
-  }
+  }, [donorId])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleToggleAvailability = async () => {
     const next = !isAvailable

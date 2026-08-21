@@ -1,16 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
-import { Radio, RadioTower, Square, RotateCcw, MapPin, Clock, Navigation } from 'lucide-react'
+import { Radio, RadioTower, Square, MapPin, Clock } from 'lucide-react'
 
 export default function TrackingStatus({
-  requestId,
   hospitalName = 'Emergency Medical Center',
   emergencyLocation = null,
   onTrackingStart,
   onTrackingStop,
-  role = 'hospital',
 }) {
   const [isTracking, setIsTracking] = useState(false)
-  const [currentLocation, setCurrentLocation] = useState(null)
+  const [, setCurrentLocation] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [accuracy, setAccuracy] = useState(null)
   const [eta, setEta] = useState(null)
@@ -19,7 +17,6 @@ export default function TrackingStatus({
   const [permissionDenied, setPermissionDenied] = useState(false)
   const [showConsent, setShowConsent] = useState(false)
   const watchRef = useRef(null)
-  const timerRef = useRef(null)
 
   // Update "seconds ago" display
   useEffect(() => {

@@ -1,4 +1,3 @@
-import React from 'react'
 import { AlertCircle, AlertTriangle, CheckCircle2, Clock, Info, ShieldCheck } from 'lucide-react'
 
 export default function StatusBadge({ status, size = 'medium', showIcon = true }) {
@@ -6,8 +5,8 @@ export default function StatusBadge({ status, size = 'medium', showIcon = true }
 
   const s = String(status).toUpperCase()
 
-  let colorClass = 'badge-neutral'
-  let Icon = Info
+  let colorClass
+  let Icon
   let label = status
 
   switch (s) {

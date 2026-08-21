@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Navbar from '../components/Navbar'
 import ExcelImportModal from '../components/ExcelImportModal'
 import GoogleMapView from '../components/GoogleMapView'
@@ -24,11 +24,7 @@ export default function AdminDashboardPage() {
   const [activeRequests, setActiveRequests] = useState([])
   const [isExcelModalOpen, setIsExcelModalOpen] = useState(false)
 
-  useEffect(() => {
-    loadAdminData()
-  }, [])
-
-  const loadAdminData = async () => {
+  const loadAdminData = useCallback(async () => {
     try {
       const statsRes = await fetchAdminStats()
       if (statsRes.data) setStats(statsRes.data)
@@ -56,9 +52,13 @@ export default function AdminDashboardPage() {
     } catch {
       setActiveRequests([])
     }
-  }
+  }, [])
 
-  const handleImportCompleted = (count) => {
+  useEffect(() => {
+    loadAdminData()
+  }, [loadAdminData])
+
+  const handleImportCompleted = () => {
     loadAdminData()
   }
 

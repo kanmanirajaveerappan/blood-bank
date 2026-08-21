@@ -1,5 +1,4 @@
-import React from 'react'
-import { AlertCircle, MapPin, Clock, Check, Eye } from 'lucide-react'
+import { MapPin, Clock, Check, Eye } from 'lucide-react'
 import StatusBadge from './StatusBadge'
 
 export default function EmergencyCard({

@@ -1,5 +1,4 @@
-import React from 'react'
-import { Inbox, AlertCircle, RefreshCw } from 'lucide-react'
+import { Inbox, RefreshCw } from 'lucide-react'
 
 export function EmptyState({
   icon: Icon = Inbox,

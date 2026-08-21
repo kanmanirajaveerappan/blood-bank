@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { validateExcelImport, confirmExcelImport } from '../services/api'
 
 export default function ExcelImportModal({ isOpen, onClose, onImportCompleted }) {
-  const [file, setFile] = useState(null)
+  const [, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const [analysis, setAnalysis] = useState(null)
   const [importing, setImporting] = useState(false)
@@ -38,7 +38,7 @@ export default function ExcelImportModal({ isOpen, onClose, onImportCompleted })
     if (!analysis || !analysis.valid_count) return
     setImporting(true)
     try {
-      const res = await confirmExcelImport(analysis.valid_records || analysis.valid_count)
+      await confirmExcelImport(analysis.valid_records || analysis.valid_count)
       setSuccessMessage(`Successfully committed ${analysis.valid_count} validated donor profiles to PostgreSQL database!`)
       if (onImportCompleted) onImportCompleted(analysis.valid_count)
       setTimeout(() => {

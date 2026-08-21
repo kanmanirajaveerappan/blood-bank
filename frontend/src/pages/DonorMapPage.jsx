@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, MapPin, Shield, Users, Radio, Navigation, RefreshCw } from 'lucide-react'
+import { ArrowLeft, MapPin, Shield, Users, Navigation } from 'lucide-react'
 import GoogleMapView from '../components/GoogleMapView'
 import StatusBadge from '../components/ui/StatusBadge'
 import { EmptyState } from '../components/ui/EmptyState'
@@ -29,11 +29,7 @@ export default function DonorMapPage() {
     status: 'ACTIVE_SEARCH',
   }
 
-  useEffect(() => {
-    loadLiveCandidates()
-  }, [selectedRadius])
-
-  const loadLiveCandidates = async () => {
+  const loadLiveCandidates = useCallback(async () => {
     setLoading(true)
     try {
       const res = await requestDonorMatch({
@@ -49,7 +45,11 @@ export default function DonorMapPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [emergencyInfo.bloodGroup, hospitalLocation.lat, hospitalLocation.lon, selectedRadius])
+
+  useEffect(() => {
+    loadLiveCandidates()
+  }, [loadLiveCandidates])
 
   const handleNotify = (donorId) => {
     setNotifiedCandidates(prev => ({ ...prev, [donorId]: 'DISPATCHED' }))
@@ -69,7 +69,7 @@ export default function DonorMapPage() {
           </button>
           <div className="donor-map-badge-wrap">
             <span className="live-pulse-dot" />
-            <span className="donor-map-title">Donor Proximity Map</span>
+            <span className="donor-map-title">{loading ? 'Scanning Nearby Donors...' : 'Donor Proximity Map'}</span>
             <StatusBadge status={emergencyInfo.urgency} />
           </div>
         </div>

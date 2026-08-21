@@ -38,7 +38,7 @@ export default function PublicHome() {
         maxDistanceKm: simRadius,
       })
       setSimResults(res.data || [])
-    } catch (err) {
+    } catch {
       setSimResults([])
     } finally {
       setSimLoading(false)

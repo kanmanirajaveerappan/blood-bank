@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import GoogleMapView from '../components/GoogleMapView'
@@ -6,7 +6,7 @@ import CandidateTable from '../components/CandidateTable'
 import EmergencyWizardModal from '../components/EmergencyWizardModal'
 import AiMatchingVisualizer from '../components/AiMatchingVisualizer'
 import { fetchHospitalRequests, requestDonorMatch } from '../services/api'
-import { Siren, Navigation, Radio, MapPin, Clock, AlertTriangle, ChevronRight, RefreshCw, Inbox } from 'lucide-react'
+import { Siren, Navigation, Radio, MapPin, Clock, AlertTriangle, ChevronRight, Inbox } from 'lucide-react'
 
 const URGENCY_CLASSES = { Critical: 'urgency-critical', High: 'urgency-high', Medium: 'urgency-medium' }
 
@@ -22,9 +22,26 @@ export default function HospitalDashboardPage() {
   const [activeView, setActiveView] = useState('map') // map | table | ai
   const navigate = useNavigate()
 
-  useEffect(() => { loadRequests() }, [])
+  const handleSelectRequest = useCallback(async (req) => {
+    setSelectedRequest(req)
+    setLoading(true)
+    try {
+      const res = await requestDonorMatch({
+        bloodGroup: req.blood_group,
+        latitude: req.latitude || 11.0168,
+        longitude: req.longitude || 76.9558,
+        k: 5,
+        maxDistanceKm: radiusKm,
+      })
+      setCandidates(res.data || [])
+    } catch {
+      setCandidates([])
+    } finally {
+      setLoading(false)
+    }
+  }, [radiusKm])
 
-  const loadRequests = async () => {
+  const loadRequests = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetchHospitalRequests()
@@ -43,29 +60,13 @@ export default function HospitalDashboardPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [handleSelectRequest])
 
-  const handleSelectRequest = async (req) => {
-    setSelectedRequest(req)
-    setLoading(true)
-    try {
-      const res = await requestDonorMatch({
-        bloodGroup: req.blood_group,
-        latitude: req.latitude || 11.0168,
-        longitude: req.longitude || 76.9558,
-        k: 5,
-        maxDistanceKm: radiusKm,
-      })
-      setCandidates(res.data || [])
-    } catch {
-      setCandidates([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    loadRequests()
+  }, [loadRequests])
 
   const criticalCount = requests.filter(r => r.urgency === 'Critical').length
-  const highCount = requests.filter(r => r.urgency === 'High').length
 
   const mapCenter = selectedRequest
     ? { lat: selectedRequest.latitude || 13.0827, lng: selectedRequest.longitude || 80.2707 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { MapPin, Clock, Wifi, WifiOff, ShieldCheck, AlertTriangle } from 'lucide-react'
+import { MapPin, Clock, Wifi, ShieldCheck, AlertTriangle } from 'lucide-react'
 
 const FRESHNESS_CONFIG = {
   FRESH: { color: 'var(--success)', dot: 'dot-green', text: 'Fresh', maxAgeMin: 5 },

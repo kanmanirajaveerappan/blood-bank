@@ -1,4 +1,3 @@
-import React from 'react'
 import { CheckCircle2, ShieldCheck, Clock } from 'lucide-react'
 
 export default function Timeline({ items = [], emptyMessage = 'No history records found.' }) {

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Navbar from '../components/Navbar'
 import { fetchBloodInventory, updateInventoryUnits, fetchBloodDispatches } from '../services/api'
-import { Inbox, RefreshCw, Droplet } from 'lucide-react'
+import { Inbox } from 'lucide-react'
 
 export default function BloodBankDashboardPage() {
   const [theme, setTheme] = useState('dark')
@@ -13,15 +13,11 @@ export default function BloodBankDashboardPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
 
-  useEffect(() => {
-    loadData()
-  }, [])
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       const invRes = await fetchBloodInventory()
       setInventory(invRes.data || [])
-    } catch (err) {
+    } catch {
       setInventory([])
     }
 
@@ -31,7 +27,11 @@ export default function BloodBankDashboardPage() {
     } catch {
       setDispatches([])
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    loadData()
+  }, [loadData])
 
   const handleOpenEdit = (item) => {
     setSelectedGroup(item)

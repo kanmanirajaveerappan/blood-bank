@@ -16,8 +16,6 @@ export default function RoutePanel({
   origin,        // { lat, lng, label }
   destination,   // { lat, lng, label }
   theme = 'dark',
-  requestId,
-  emergencyDetails,
   showMap = true,
   mapHeight = 500,
 }) {

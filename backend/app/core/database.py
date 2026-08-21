@@ -5,12 +5,17 @@ from backend.app.core.config import settings
 from backend.app.models import (
     user,
     donor,
+    donor_location,
     hospital,
     blood_bank,
     blood_request,
     matching_result,
     notification,
     audit_log,
+    inventory,
+    donation_history,
+    donor_commitment,
+    donation_rules,
 )  # noqa: F401
 from contextlib import contextmanager
 

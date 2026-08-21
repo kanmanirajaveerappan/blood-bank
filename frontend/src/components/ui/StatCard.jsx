@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function StatCard({ icon: Icon, label, value, delta, tone = 'blue', onClick }) {
   return (
     <article

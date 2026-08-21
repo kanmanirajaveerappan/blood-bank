@@ -3,7 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import GoogleMapView from '../components/GoogleMapView'
 import TrackingStatus from '../components/TrackingStatus'
-import { ArrowLeft, Clock, Siren, RotateCcw, Navigation, Inbox } from 'lucide-react'
+import { ArrowLeft, Clock, RotateCcw, Navigation } from 'lucide-react'
+
+const formatTime = (date) => {
+  if (!date) return '—'
+  return new Date(date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
 
 function ActivityTimeline({ events }) {
   return (
@@ -134,7 +139,7 @@ export default function LiveTrackingPage() {
             <div className="tracking-summary-item">
               <span className="tracking-summary-label">Last Refresh</span>
               <span style={{ color: 'var(--text-subtle)', fontSize: '0.82rem' }}>
-                <Clock size={12} /> {fmt(lastRefresh)}
+                <Clock size={12} /> {formatTime(lastRefresh)}
               </span>
             </div>
           </div>
@@ -147,7 +152,7 @@ export default function LiveTrackingPage() {
             <div className="panel" style={{ padding: 0, overflow: 'hidden' }}>
               <div className="nav-panel-inner-header">
                 <span className="tracking-pulse-dot" />
-                Live Emergency Map
+                Live Emergency Map {loading ? '(Loading...)' : ''}
                 <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: 'var(--text-subtle)' }}>
                   Hospital → Route → Destination
                 </span>
@@ -182,40 +187,26 @@ export default function LiveTrackingPage() {
             </div>
           </div>
 
-          {/* Right Panel */}
-          <div className="tracking-info-section">
-            {/* Tracking Control */}
-            <div className="panel">
-              <span className="micro-label">GPS Tracking Controls</span>
-              <div style={{ marginTop: 12 }}>
-                <TrackingStatus
-                  requestId={request?.id || requestId}
-                  hospitalName={request?.hospitalName}
-                  emergencyLocation={request ? { lat: request.emergencyLat, lng: request.emergencyLng } : null}
-                  onTrackingStart={(loc) => {
-                    setCurrentLocation(loc)
-                    setMapCenter(loc)
-                  }}
-                  role="hospital"
-                />
-              </div>
-            </div>
+          {/* Right Rail: Tracking Controls & Live Updates */}
+          <div className="tracking-side-panel">
+            <TrackingStatus
+              requestId={requestId}
+              hospitalName={request?.hospitalName || 'Emergency Medical Center'}
+              emergencyLocation={request ? { lat: request.emergencyLat, lng: request.emergencyLng } : null}
+              onTrackingStart={(pos) => setCurrentLocation(pos)}
+              onTrackingStop={() => setCurrentLocation(null)}
+            />
 
-            {/* Route Info */}
+            {/* Quick telemetry summary */}
             <div className="panel">
-              <span className="micro-label">Route Information</span>
               <div className="route-info-mini-grid">
                 <div className="route-info-mini-item">
-                  <span>Distance</span>
+                  <span>Target Distance</span>
                   <strong>~4.8 km</strong>
                 </div>
                 <div className="route-info-mini-item">
                   <span>ETA</span>
                   <strong>~14 min</strong>
-                </div>
-                <div className="route-info-mini-item">
-                  <span>Traffic</span>
-                  <strong style={{ color: 'var(--warning)' }}>Moderate</strong>
                 </div>
               </div>
             </div>
@@ -224,7 +215,14 @@ export default function LiveTrackingPage() {
             <div className="panel">
               <span className="micro-label">Activity Timeline</span>
               <div style={{ marginTop: 12 }}>
-                <ActivityTimeline events={ACTIVITY_EVENTS} />
+                <ActivityTimeline
+                  events={[
+                    { title: 'Emergency Broadcast Initiated', time: '10:00 AM', detail: 'KNN matching dispatched notifications to nearby eligible donors.', completed: true },
+                    { title: 'Donor Accepted Request', time: '10:03 AM', detail: 'Donor confirmed dispatch and is en route to facility.', completed: true },
+                    { title: 'In-Transit Route Tracking', time: '10:05 AM', detail: 'Real-time GPS telemetry active.', completed: request?.status !== 'CANCELLED' },
+                    { title: 'Arrival & Blood Verification', time: 'Pending', detail: 'Final clinical screening at hospital blood bank.', completed: request?.status === 'FULFILLED' || request?.status === 'Delivered' },
+                  ]}
+                />
               </div>
             </div>
 
