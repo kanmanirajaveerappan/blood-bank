@@ -1,10 +1,10 @@
 """DonorCommitment — atomic record of a donor accepting an emergency blood request."""
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class DonorCommitment(Base):
@@ -31,5 +31,5 @@ class DonorCommitment(Base):
     priority_score: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow, nullable=False
+        DateTime, default=lambda: datetime.now(timezone.utc), nullable=False
     )

@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Float, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class Hospital(Base):
@@ -18,5 +18,5 @@ class Hospital(Base):
     longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     verification_status: Mapped[str] = mapped_column(String(30), default="pending")
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)

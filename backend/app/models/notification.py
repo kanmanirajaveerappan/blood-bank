@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class Notification(Base):
@@ -19,7 +19,7 @@ class Notification(Base):
     delivered_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     viewed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     retry_count: Mapped[int] = mapped_column(default=0)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
 
     # ── Lifecycle State Timestamps ────────────────────────────────────────────
     accepted_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

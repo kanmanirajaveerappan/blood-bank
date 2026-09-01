@@ -1,17 +1,17 @@
-from backend.app.models.base import Base
-from backend.app.models.user import User
-from backend.app.models.donor import Donor
-from backend.app.models.donor_location import DonorLocation
-from backend.app.models.hospital import Hospital
-from backend.app.models.blood_bank import BloodBank
-from backend.app.models.blood_request import BloodRequest
-from backend.app.models.matching_result import MatchingResult
-from backend.app.models.notification import Notification
-from backend.app.models.audit_log import AuditLog
-from backend.app.models.inventory import BloodInventory
-from backend.app.models.donation_history import DonationHistory
-from backend.app.models.donor_commitment import DonorCommitment
-from backend.app.models.donation_rules import DonationRule
+from .base import Base
+from .user import User
+from .donor import Donor
+from .donor_location import DonorLocation
+from .hospital import Hospital
+from .blood_bank import BloodBank
+from .blood_request import BloodRequest
+from .matching_result import MatchingResult
+from .notification import Notification
+from .audit_log import AuditLog
+from .inventory import BloodInventory
+from .donation_history import DonationHistory
+from .donor_commitment import DonorCommitment
+from .donation_rules import DonationRule
 
 __all__ = [
     "Base",

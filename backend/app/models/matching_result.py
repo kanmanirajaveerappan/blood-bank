@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Float, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class MatchingResult(Base):
@@ -17,4 +17,4 @@ class MatchingResult(Base):
     compatibility_status: Mapped[str] = mapped_column(String(30), default="eligible")
     availability_status: Mapped[str] = mapped_column(String(30), default="available")
     explanation: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)

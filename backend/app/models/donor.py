@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Boolean, Float, Text, Integer
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class Donor(Base):
@@ -37,8 +37,8 @@ class Donor(Base):
     last_active: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     last_location_update: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     privacy_level: Mapped[str] = mapped_column(String(30), default="standard")
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # ── Donation Eligibility Fields ───────────────────────────────────────────

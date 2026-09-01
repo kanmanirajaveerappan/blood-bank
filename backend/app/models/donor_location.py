@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import String, Float, DateTime, Enum, Text, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 class DonorLocation(Base):
     __tablename__ = "donor_locations"
@@ -21,7 +21,7 @@ class DonorLocation(Base):
         default="CURRENT_GPS",
     )
     accuracy: Mapped[float | None] = mapped_column(Float, nullable=True)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
     confidence: Mapped[str] = mapped_column(
         Enum("HIGH", "MEDIUM", "LOW", "UNKNOWN", name="location_confidence"),
         nullable=False,
