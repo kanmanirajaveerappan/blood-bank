@@ -21,3 +21,4 @@ openpyxl==3.1.5
 python-socketio==5.16.4
 python-engineio==4.13.5
 simple-websocket==1.1.0
+gunicorn==23.0.0
