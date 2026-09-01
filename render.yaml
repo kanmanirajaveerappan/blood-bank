@@ -1,0 +1,25 @@
+databases:
+  - name: redradius-db
+    databaseName: redradius
+    user: redradius_user
+    plan: free
+
+services:
+  - type: web
+    name: redradius-backend
+    env: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 --timeout 120 app.main:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: redradius-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: PYTHONPATH
+        value: /opt/render/project/src/backend
