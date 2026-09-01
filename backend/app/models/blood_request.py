@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, DateTime, Float, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from backend.app.models.base import Base
+from .base import Base
 
 
 class BloodRequest(Base):
@@ -24,8 +24,8 @@ class BloodRequest(Base):
     location_accuracy: Mapped[str | None] = mapped_column(String(50), default="good", nullable=True)
     required_by: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     additional_info: Mapped[str | None] = mapped_column(Text, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc), nullable=False)
 
     # ── Fulfillment Tracking ─────────────────────────────────────────────────────
     accepted_units: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
