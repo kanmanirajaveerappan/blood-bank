@@ -19,11 +19,13 @@ services:
     container_name: lifelink-backend
     depends_on:
       - postgres
-    env_file:
-      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/lifelink
+      - DEBUG=False
+      - JWT_SECRET=redradius-production-secret-key
     ports:
       - '8000:8000'
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: gunicorn --bind 0.0.0.0:8000 --workers 1 --threads 8 --timeout 120 app.main:app
 
   frontend:
     build:
