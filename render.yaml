@@ -21,5 +21,7 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: PYTHONPATH
-        value: /opt/render/project/src/backend
+        value: /opt/render/project/src:/opt/render/project/src/backend:.
