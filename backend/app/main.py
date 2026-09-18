@@ -31,8 +31,21 @@ def create_app() -> Flask:
     app.config["SECRET_KEY"] = settings.jwt_secret
     app.config["JSON_SORT_KEYS"] = False
 
-    # Enable CORS for frontend communication
-    CORS(app, origins="*", supports_credentials=True)
+    # Enable CORS for frontend communication (supports Vercel, Render, and localhost)
+    CORS(
+        app,
+        resources={r"/*": {"origins": "*"}},
+        allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+        methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    )
+
+    @app.after_request
+    def add_cors_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        return response
+
 
     # Initialize database tables
     try:
