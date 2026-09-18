@@ -18,3 +18,16 @@ services:
       - key: PYTHONPATH
         value: /opt/render/project/src:/opt/render/project/src/backend:.
 
+  - type: static
+    name: redradius-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://redradius-backend.onrender.com
+
